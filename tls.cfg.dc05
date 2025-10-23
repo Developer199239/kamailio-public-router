@@ -1,0 +1,56 @@
+#
+# Kamailio TLS Configuration File with Let's Encrypt Certificates
+# Updated: October 23, 2025
+#
+
+# ---
+# Default server profile - handles all TLS connections using SNI
+# Uses wildcard certificate for *.dc05.sandboxegytelecoms.com
+#
+[server:default]
+method = TLSv1.2+
+verify_certificate = no
+require_certificate = no
+private_key = /etc/kamailio/certs/privkey.pem
+certificate = /etc/kamailio/certs/fullchain.pem
+ca_list = /etc/kamailio/certs/chain.pem
+cipher_list = HIGH:!aNULL:!MD5:!RC4:!DES:!3DES
+
+# ---
+# Default client domain profile for outgoing connections
+# Used when Kamailio makes outbound TLS connections
+#
+[client:default]
+method = TLSv1.2+
+verify_certificate = no
+require_certificate = no
+private_key = /etc/kamailio/certs/privkey.pem
+certificate = /etc/kamailio/certs/fullchain.pem
+ca_list = /etc/kamailio/certs/chain.pem
+cipher_list = HIGH:!aNULL:!MD5:!RC4:!DES:!3DES
+
+# ---
+# Client profile for specific trusted destinations (if needed)
+# Uncomment and customize for specific SIP trunks that require client certificates
+#
+#[client:trusted.sipprovider.com:5061]
+#method = TLSv1.2+
+#verify_certificate = yes
+#require_certificate = yes
+#private_key = /etc/kamailio/certs/privkey.pem
+#certificate = /etc/kamailio/certs/fullchain.pem
+#ca_list = /etc/ssl/certs/ca-certificates.crt
+
+# ---
+# TLS Security Settings
+# - TLSv1.2+ only (no SSL, TLS1.0, TLS1.1)
+# - Strong cipher suites only
+# - No NULL encryption
+# - No weak ciphers (MD5, RC4, DES, 3DES)
+#
+# Supported cipher suites include:
+# - ECDHE-RSA-AES256-GCM-SHA384
+# - ECDHE-RSA-AES128-GCM-SHA256
+# - DHE-RSA-AES256-GCM-SHA384
+# - DHE-RSA-AES128-GCM-SHA256
+#

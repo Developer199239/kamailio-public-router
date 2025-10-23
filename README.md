@@ -10,15 +10,37 @@ Kamailio is an open-source SIP server that handles VoIP and real-time communicat
 
 ### Configuration Files
 - **`kamailio.cfg`** - Main Kamailio configuration file containing routing logic, SIP handling rules, and server settings
-- **`backup.kamailio.cfg.backuscp c5.sandboxegytelecoms.com:/etc/kamailio/kamailio.cfg /home/ahmed/Documents/Egytel/kamailio-public-router/p`** - Backup copy of the Kamailio configuration for rollback purposes
+- **`backup.kamailio.cfg.backup`** - Backup copy of the Kamailio configuration for rollback purposes
 - **`kamctlrc`** - Kamailio control tool configuration file
 - **`tls.cfg`** - TLS/SSL configuration for secure SIP communications (SIPS)
 - **`test-sip-setup.sh`** - Script for testing SIP setup and connectivity
+- **`server-mappings.conf`** - Documentation of Asterisk server domain-to-IP mappings
+
+### Documentation Files
+- **`README.md`** - This file, general project documentation
+- **`NETWORKING.md`** - Detailed networking configuration and architecture documentation
+
+### Management Scripts
+- **`manage-servers.sh`** - Interactive script for managing Asterisk server mappings and testing connectivity
 
 ## Server Information
 - **Remote Server**: c5.sandboxegytelecoms.com
 - **Configuration Path**: /etc/kamailio/
 - **Access**: Root user access required for configuration management
+
+## Network Configuration
+- **VPN Network**: 10.10.50.0/23
+- **Kamailio VPN IP**: 10.10.40.127
+- **Primary Asterisk**: 10.10.40.117 (ast1.sandboxegytelecoms.com)
+- **Public IP**: 101.46.69.57
+
+### Domain-Based Routing
+Kamailio uses domain-to-IP mapping for routing to multiple Asterisk servers:
+- Each Asterisk server has a public domain/subdomain
+- Kamailio maintains a hash table mapping domains to VPN IPs
+- Easy to add new servers by updating the configuration
+
+See **[NETWORKING.md](NETWORKING.md)** for detailed architecture and configuration.
 
 ## Workflow
 
@@ -45,12 +67,28 @@ ssh root@c5.sandboxegytelecoms.com "systemctl restart kamailio"
 ssh root@c5.sandboxegytelecoms.com "systemctl status kamailio"
 ```
 
+### Managing Asterisk Servers
+Use the management script to add/test servers:
+```bash
+# On the remote server
+sudo ./manage-servers.sh
+```
+
+The script provides:
+- View current server mappings
+- Add new Asterisk servers
+- Test server connectivity
+- Check routing configuration
+- View logs and status
+
 ## Best Practices
 
-1. **Deploy To Test**: Test configuration by deploying it to the remote server
-2. **Version Control**: Commit all changes to Git with descriptive messages
-3. **Review Logs**: Monitor Kamailio logs after configuration changes
-4. **Document Changes**: Update this README when adding new configurations or scripts
+1. **Always Backup**: Create backups before making changes
+2. **Test Configuration**: Validate syntax before deploying
+3. **Version Control**: Commit all changes to Git with descriptive messages
+4. **Review Logs**: Monitor Kamailio logs after configuration changes
+5. **Document Changes**: Update README and NETWORKING.md when adding servers
+6. **Use Management Script**: Leverage manage-servers.sh for consistency
 
 ## Configuration Management
 
